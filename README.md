@@ -1,4 +1,12 @@
-proj_kevinsk
-============
+##CSCI 104 Project Repository
 
-Private Repository for CS 104 Assignments
+###Student Information
+  + Name: Tommy Trojan
+  + USC Email: ttrojan@usc.edu
+  + USC ID: 0123456789
+
+###Project Description
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+###Compile & Run Instructions
+TBD

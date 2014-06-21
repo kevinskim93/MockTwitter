@@ -1,21 +1,47 @@
-# Compiled Object files
+#Compiled Object files
 *.slo
 *.lo
 *.o
+*.moc
 *.obj
 
-# Compiled Dynamic libraries
+#Pre-Compiled Header Files
+*.gch
+
+#Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
+*.dSYM
 
-# Compiled Static libraries
+#Compiled Static libraries
 *.lai
 *.la
 *.a
-*.lib
 
-# Executables
+#Executables
 *.exe
 *.out
-*.app
+
+#Editor Temporary Files
+.*.sw[a-z]
+*~
+\#*\#
+*.tmp
+*.bak
+
+#Packages
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+#OS generated files
+Thumbs.db
+Desktop.ini
+.DS_Store
+.Trashes
+.Trash
