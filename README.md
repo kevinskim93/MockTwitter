@@ -10,12 +10,15 @@ This is part 1 of the Twitter project. It will read in a file of tweets, as well
 
 
 ###Compile & Run Instructions
-To compile, type: 
-make
-
-To run, type:
+To compile this problem, run the following commands after cloning the repository
+```bash
 cd proj_kevinsk
-cd bin
+make
+```
+
+The problem requires 1 argument
+```bash
 ./twitter twitter.dat
+```
 
 This file requires two arguments
