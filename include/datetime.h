@@ -41,6 +41,14 @@ struct DateTime
 
   /* Add data members here -- they can all be public 
    * which is why we've made this a struct */
+  
+  int hour;
+  int minute;
+  int second;
+  int year;
+  int month;
+  int day;
+
 
 
 };
