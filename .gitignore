@@ -22,6 +22,9 @@
 *.exe
 *.out
 
+#Project-Specific
+bin/
+
 #Editor Temporary Files
 .*.sw[a-z]
 *~
