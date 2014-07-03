@@ -98,13 +98,10 @@ void User::makeFeed(){
     }
   }
 
-  std::cout<<"first size: " << Feed.size() << "second size: ";
-
   for (int m = 0; m < Tweets.size(); m++){
     Feed.insert(Feed.size(), Tweets.get(m));
   }
 
-  std::cout<<Feed.size() << std::endl;
 
   for(int i = 0; i < Feed.size()-1; i++){
     int min = i; 
