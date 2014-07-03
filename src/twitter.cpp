@@ -258,6 +258,13 @@ int main(int argc, char *argv[]){
 		ofile.close();
 	}
 
+	for(u = usersList.first(); u != NULL; u = usersList.next()){
+		for(int i = 0; i < (*u)->tweets().size(); i++){
+			delete (*u)->tweets().get(i);
+		}
+		delete *u;
+	}
+
 	return 0;
 
 }
