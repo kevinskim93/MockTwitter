@@ -93,20 +93,20 @@ void User::addTweet(Tweet* t){
 void User::makeFeed(){
   User** u;
   for (u = Following.first(); u != NULL; u = Following.next() ){
-    for (unsigned int j = 0; j < (*u)->tweets().size(); j++){
+    for (int j = 0; j < (*u)->tweets().size(); j++){
       Feed.insert(Feed.size(), (*u)->tweets().get(j));
     }
   }
 
   std::cout<<"first size: " << Feed.size() << "second size: ";
 
-  for (unsigned int m = 0; m < Tweets.size(); m++){
+  for (int m = 0; m < Tweets.size(); m++){
     Feed.insert(Feed.size(), Tweets.get(m));
   }
 
   std::cout<<Feed.size() << std::endl;
 
-  for(unsigned int i = 0; i < Feed.size()-1; i++){
+  for(int i = 0; i < Feed.size()-1; i++){
     int min = i; 
     for(int j = i+1; j < Feed.size(); j++){ 
       if(*((Feed.get(j))) < (*((Feed.get(min)))) ) { 
