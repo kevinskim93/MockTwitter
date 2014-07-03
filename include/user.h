@@ -72,6 +72,8 @@ class User {
    */
   void addTweet(Tweet* t);
 
+  void makeFeed();
+
   /**
    * Produces the list of Tweets that represent this users feed/timeline
    *  It should contain in timestamp order all the tweets from
@@ -81,6 +83,7 @@ class User {
    *         and those they follow in timestamp order
    */
   AList<Tweet*> getFeed();
+
 
   friend std::ostream& operator<<(std::ostream& os, const User*& u){
 

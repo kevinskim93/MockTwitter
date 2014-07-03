@@ -183,7 +183,7 @@ int main(int argc, char *argv[]){
 		string tempName(token);
 
 
-		string tempText;
+		string tempText = tempName + " ";
 		token = strtok(NULL," ");
 		while(token){
 			string tempToken(token);
@@ -250,6 +250,7 @@ int main(int argc, char *argv[]){
 		oFile += ".feed";
 		ofstream ofile(oFile.c_str());
 		ofile << (*u)->name() << endl;
+		(*u)->makeFeed();
 		int size = (*u)->getFeed().size();
 		for(int i = 0; i < size; i++){
 			ofile << (*(*u)->getFeed().get(i)) << endl;

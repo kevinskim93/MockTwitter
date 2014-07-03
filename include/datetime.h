@@ -32,7 +32,8 @@ struct DateTime
    *
    * @return result of less-than comparison of timestamp
    */
-  bool operator<(const DateTime& other){
+  bool operator<(const DateTime& other){      
+
     if(year < other.year){
       return true;
     }
@@ -57,7 +58,7 @@ struct DateTime
           return false;
         }
         else if (day == other.day){
-          if(hour < other.day){
+          if(hour < other.hour){
             return true;
           }
           else if(hour > other.hour){
@@ -86,7 +87,7 @@ struct DateTime
       }
     }
 
-    return true;
+    return false;
   }
 
   /**
@@ -119,7 +120,7 @@ struct DateTime
           return true;
         }
         else if (day == other.day){
-          if(hour < other.day){
+          if(hour < other.hour){
             return false;
           }
           else if(hour > other.hour){
@@ -148,7 +149,7 @@ struct DateTime
       }
     }
 
-    return true;
+    return false;
   }
 
   /**
@@ -159,7 +160,31 @@ struct DateTime
    */
   friend std::ostream& operator<<(std::ostream& os, const DateTime& other){
 
-    os << other.year << "-" << other.month << "-" <<other.day << " " <<other.hour <<"::"<<other.minute<<"::"<<other.second;
+    os << other.year << "-" << other.month << "-" <<other.day << " ";
+
+    if(other.hour == 00){
+      os << "00";
+    }
+    else{
+      os << other.hour;
+    }
+    
+    os << "::";
+
+    if(other.minute == 0){
+      os << "00";
+    }
+    else{
+      os << other.minute;
+    }
+    os << "::";
+
+    if(other.second == 0){
+      os << "00";
+    }
+    else{
+      os << other.second;
+    }
     
     return os;
   }

@@ -90,8 +90,7 @@ void User::addTweet(Tweet* t){
  * @return vector of pointers to all the tweets from this user
  *         and those they follow in timestamp order
  */
-AList<Tweet*> User::getFeed(){
-  
+void User::makeFeed(){
   User** u;
   for (u = Following.first(); u != NULL; u = Following.next() ){
     for (unsigned int j = 0; j < (*u)->tweets().size(); j++){
@@ -99,27 +98,32 @@ AList<Tweet*> User::getFeed(){
     }
   }
 
+  std::cout<<"first size: " << Feed.size() << "second size: ";
+
   for (unsigned int m = 0; m < Tweets.size(); m++){
     Feed.insert(Feed.size(), Tweets.get(m));
   }
 
-  for(unsigned int i = 0; i < Feed.size(); i++){
+  std::cout<<Feed.size() << std::endl;
+
+  for(unsigned int i = 0; i < Feed.size()-1; i++){
     int min = i; 
     for(int j = i+1; j < Feed.size(); j++){ 
-      
-      Tweet* time1 = Feed.get(j);
-      Tweet* time2 = Feed.get(min);
-
-      if(time1->time() < time2->time()) { 
+      if(*((Feed.get(j))) < (*((Feed.get(min)))) ) { 
+        //std::cout<<min<<std::endl;
         min = j;
       } 
     } 
     
-    Tweet* tempTweet = Feed.get(min);
-    Feed.set(min, Feed.get(i));
-    Feed.set(i, tempTweet); 
-  }
+    Tweet* tempTweet = (Feed.get(min));
 
+    Feed.set(min, Feed.get(i)); 
+    Feed.set(i, tempTweet);
+    
+  }
+}
+
+AList<Tweet*> User::getFeed(){
 
   return Feed;
 

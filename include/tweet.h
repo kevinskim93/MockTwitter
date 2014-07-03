@@ -63,7 +63,7 @@ class Tweet
    */
   friend std::ostream& operator<<(std::ostream& os, const Tweet& t){
 
-    os << t._time << " " << t._user << " " << t._text;
+    os << t._time << " " << t._text;
     return os;
 
   }
