@@ -47,8 +47,6 @@ class AList
          Your function should throw an exception if position is
          outside the legal range. */
 
-
-    private:
       AList(const AList&);
       /* This is a copy constructor and we likely haven't learned how to make
          deep copies of a list yet.  Thus by making it's prototype private, the
@@ -58,6 +56,9 @@ class AList
       /* This is a copy constructor and we likely haven't learned how to make
          deep copies of a list yet.  Thus by making it's prototype private, the
          compiler will enforce that no one ever be allowed to make a copy of a AList */
+
+
+    private:
 
       T* data;
 
@@ -185,18 +186,38 @@ T const& AList<T>::get (int position) const {
   return data[position];
 }
 
+
+
 template<typename T>
-AList (const AList<myType> & other){
+AList<T>::AList (const AList<T> & other){
 
-
-
+  this->number = other.number;
+  this->capacity = other.capacity;
+  this->data = new T[number];
+  for(int i=0; i < number; i++){
+     this->data[i] = other.data[i];
+  }
 }
   // A copy constructor which performs a deep copy.
 
 template<typename T>
-AList<myType> & operator= (const AList<myType> & other){
+AList<T> & AList<T>::operator= (const AList<T> & other){
 
-
+  if ( this == &other  ){
+    return *this;
+  }
+  // check if the member are already initialized
+  if( data != NULL){
+    delete [] data;
+  }
+  this->capacity = other.capacity;
+  this->number = other.size();
+  // dat already is pointing at a dynamic array
+  data = new T[capacity];
+  for(int i=0; i < number; i++){
+    data[i] = other.data[i];
+  }
+  return *this;
 
 }
   // An assignment operators.

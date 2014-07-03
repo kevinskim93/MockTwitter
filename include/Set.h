@@ -1,7 +1,8 @@
 // necessary includes can go here
+
 #ifndef SET_H
 #define SET_H
-#include "../include/AList.h"
+#include "AList.h"
 
 
 template <class T>
@@ -69,29 +70,29 @@ class Set {
 };
 
 template<typename T>
-Set<T>::Set ();
+Set<T>::Set(){
   state = 0;
+}
 
 template<typename T>
 Set<T>::Set (const Set<T> & other){
+  internalStorage = other.internalStorage;
   state = 0;
 
 }
 
 template<typename T>
-Set<T>::~Set (){
+Set<T>::~Set(){
 
 }                   
 
 template<typename T>
 void Set<T>::add (const T & item){
 
-  if(find(key) != -1){
-    throw std::invalid_argument("Key already exists");
+  if(contains(item)){
+    throw std::invalid_argument("item already exists");
   }
 
-  T temp; 
-  temp = item;
   internalStorage.insert(internalStorage.size(),item);
 
 
@@ -100,22 +101,22 @@ void Set<T>::add (const T & item){
      Throws an exception if the set already contains the item. */
 
 template<typename T>
-void Set<T>::remove (const T & item){
+void Set<T>::remove(const T & item){
 
-  if(find(key) == -1){
-    throw std::invalid_argument("Key does not exist");
+  if(!contains(item)){
+    throw std::invalid_argument("item does not exist");
   }
 
-  internalStorage.remove(find(key));
+  internalStorage.remove(find(item));
 }
   /* Removes the item from the set.
      Throws an exception if the set does not contain the item. */
 
 template<typename T>
-bool Set<T>::contains (const T & item) const{
+bool Set<T>::contains(const T & item) const{
 
   for(int i = 0; i < size(); i++){
-        if(item == internalStorage.get(i).T){
+        if(item == internalStorage.get(i)){
             return true;
         }
     }
@@ -126,7 +127,7 @@ bool Set<T>::contains (const T & item) const{
   /* Returns true if the set contains the item, and false otherwise. */
 
 template<typename T>
-int Set<T>::size () const{
+int Set<T>::size() const{
   return internalStorage.size();
 }
   /* Returns the number of elements in the set. */
@@ -143,44 +144,48 @@ bool Set<T>::isEmpty () const{
   /* Returns true if the set is empty, and false otherwise. */
 
 template<typename T>
-Set<T> Set<T>::setIntersection (const Set<T> & other) const{
+Set<T> Set<T>::setIntersection(const Set<T> & other) const{
 
   Set<T> temp;
 
-  for(iterator it = this.begin(); it != this.end(); ++it){
-    if(temp.find(*it) == -1){
-      temp.add(*it);
+
+  for(T* first = this->first(); first != NULL; first = this->next()){
+    for(T* second = other.first(); second != NULL; second = other.next()){
+      if(second == first){
+        if(temp.find(first) == -1){
+          temp.add(first);
+        }
+      }
     }
   }
-
-  for(iterator it = other.begin(); it != other.end(); ++it){
-    if(temp.find(*it) == -1){
-      temp.add(*it);
-    }
-  }
-
   return temp;
-
 }
+
+
   /* Returns the intersection of the current set with other.
      That is, returns the set of all items that are both in this
      and in other. */
      //mySet.setIntersection(otherSet);
 
 template<typename T>
-Set<T> Set<T>::setUnion (const Set<T> & other) const{
+Set<T> Set<T>::setUnion(const Set<T> & other) const{
 
   Set<T> temp;
 
-  for(iterator it = this.begin(); it != this.end(); ++it){
-    for(iterator it2 = other.begin(); it2 != other.end(); ++it2){
-      if(*it == *it2){
-        if(temp.find(*it) == -1){
-          temp.add(*it);
-        }
-      }
+  for(T* first = this->first(); first != NULL; first = this->next()){
+    if(temp.find(first) == -1){
+      temp.add(first);
     }
   }
+
+  for(T* first = other.first(); first != NULL; first = other.next()){
+    if(temp.find(first) == -1){
+      temp.add(first);
+    }
+  }
+
+  return temp;
+
 }
   /* Returns the union of the current set with other.
      That is, returns the set of all items that are in this set
@@ -198,10 +203,10 @@ Set<T> Set<T>::setUnion (const Set<T> & other) const{
    For now, we want to keep it simple. */
 
 template<typename T>
-T* Set<T>::first (){
+T* Set<T>::first(){
 
   if(internalStorage.size() > 0){
-    return *internalStorage.get(0);
+    return &internalStorage.get(0);
   }
 
   else{
@@ -214,21 +219,22 @@ T* Set<T>::first (){
      Should return NULL if the set is empty. */
 
 template<typename T>
-T* Set<T>::next (){
+T* Set<T>::next(){
 
   if(internalStorage.size() < 1){
+    state = 0;
     return NULL;
   }
 
   else{
 
-    int state++;
-    if(state == internalStorage.size()){
+    state++;
+    if(state == size()){
       state = 0;
       return NULL;
     }
 
-    return *internalStorage.get(state);
+    return &internalStorage.get(state);
   }
 
 }
@@ -237,11 +243,10 @@ T* Set<T>::next (){
      Should return NULL if there are no more element. */
 
 template <typename T>
-int Set<T>::find (const T & finder){
-
+int Set<T>::find(const T & finder){
     for(int i = 0; i < size(); i++){
         if(finder == internalStorage.get(i)){
-            return i;
+          return i;
         }
     }
 

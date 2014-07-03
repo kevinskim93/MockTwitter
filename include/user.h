@@ -1,6 +1,8 @@
 #ifndef USER_H
 #define USER_H
 
+#include "Set.h"
+#include "tweet.h"
 #include <string>
 /* Add appropriate includes for your data structures here */
 
@@ -12,6 +14,8 @@ class User {
   /**
    * Constructor 
    */
+  User();
+
   User(std::string name);
 
   /**
@@ -78,7 +82,26 @@ class User {
    */
   AList<Tweet*> getFeed();
 
+  friend std::ostream& operator<<(std::ostream& os, const User*& u){
+
+    os << u->Name;
+
+    return os;
+
+  }
+  
+
+  bool operator==(const User&);
+
  private:
+
+
+  std::string Name;
+
+  Set<User*> Followers;
+  Set<User*> Following;
+  AList<Tweet*> Tweets;
+  AList<Tweet*> Feed;
 
  /* Add appropriate data members here */
 

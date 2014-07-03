@@ -20,5 +20,3 @@ The problem requires 1 argument
 ```bash
 ./twitter twitter.dat
 ```
-
-This file requires two arguments

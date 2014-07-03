@@ -1,6 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
-#include "../include/AList.h"
+#include "AList.h"
+#include "user.h"
 
 
 template <class keyType, class valueType>

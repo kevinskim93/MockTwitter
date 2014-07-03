@@ -61,7 +61,12 @@ class Tweet
    *
    * @return the ostream passed in as an argument
    */
-  friend std::ostream& operator<<(std::ostream& os, const Tweet& t);
+  friend std::ostream& operator<<(std::ostream& os, const Tweet& t){
+
+    os << t._time << " " << t._user << " " << t._text;
+    return os;
+
+  }
 
   /* Create any other public or private helper functions you deem 
      necessary */
@@ -70,6 +75,7 @@ class Tweet
  private:
   DateTime _time;
   std::string _text;
+  User* _user;
 
   /* Add any other data members you need here */
 
