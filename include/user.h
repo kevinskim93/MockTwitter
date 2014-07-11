@@ -4,6 +4,7 @@
 #include "Set.h"
 #include "tweet.h"
 #include <string>
+
 /* Add appropriate includes for your data structures here */
 
 /* Forward Declaration to avoid #include dependencies */
@@ -33,23 +34,23 @@ class User {
   /**
    * Gets all the followers of this user  
    * 
-   * @return Set of Users who follow this user
+   * @return set of Users who follow this user
    */
-  Set<User*> followers();
+  std::set<User*> followers();
 
   /**
    * Gets all the users whom this user follows  
    * 
-   * @return Set of Users whom this user follows
+   * @return set of Users whom this user follows
    */
-  Set<User*> following();
+  std::set<User*> following();
 
   /**
    * Gets all the tweets this user has posted
    * 
    * @return List of tweets this user has posted
    */
-  AList<Tweet*> tweets();
+  std::vector<Tweet*> tweets();
 
   /**
    * Adds a follower to this users set of followers
@@ -72,7 +73,13 @@ class User {
    */
   void addTweet(Tweet* t);
 
+  void addMentions(Tweet* t);
+
+  void addMentioned(Tweet* t);
+
   void makeFeed();
+
+  void makeMentionedFeed();
 
   /**
    * Produces the list of Tweets that represent this users feed/timeline
@@ -82,7 +89,8 @@ class User {
    * @return vector of pointers to all the tweets from this user
    *         and those they follow in timestamp order
    */
-  AList<Tweet*> getFeed();
+  std::vector<Tweet*> getFeed();
+  std::vector<Tweet*> getMentionedFeed();
 
 
   friend std::ostream& operator<<(std::ostream& os, const User*& u){
@@ -101,10 +109,15 @@ class User {
 
   std::string Name;
 
-  Set<User*> Followers;
-  Set<User*> Following;
-  AList<Tweet*> Tweets;
-  AList<Tweet*> Feed;
+  std::set<User*> Followers;
+  std::set<User*> Following;
+
+  std::vector<Tweet*> Tweets;
+  std::vector<Tweet*> MentionsTweets;
+  std::vector<Tweet*> MentionedTweets;
+
+  std::vector<Tweet*> Feed;
+  std::vector<Tweet*> MentionedFeed;
 
  /* Add appropriate data members here */
 

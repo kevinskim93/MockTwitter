@@ -30,7 +30,9 @@ int main(int argc, char *argv[]){
 
 	ifstream ifile;
 
-	Set<User*> usersList;
+	set<User*> usersList;
+
+	vector<string> mentionedName;
 
 	string oFile;
 
@@ -74,43 +76,39 @@ int main(int argc, char *argv[]){
 		ifile.getline(line,300);
 		token = strtok(line, " ");
 		string tempUsername(token);
-		User** u;
+		set<User*>::iterator it;
 		User* tempUser;
-		for(u = usersList.first(); u != NULL; u = usersList.next()){
-			if ((*u)->name() == tempUsername){
-				while(usersList.next()){
-					}
+		for(it = usersList.begin(); it != usersList.end(); ++it){
+			if ((*it)->name() == tempUsername){
 				break;
 			}
 		}
 		
-		if(u == NULL){
+		if(it == usersList.end()){
 			tempUser = new User(tempUsername);
-			usersList.add(tempUser);
+			usersList.insert(tempUser);
 		}
 		else{
-			tempUser = *u;
+			tempUser = *it;
 		}
 
 		token = strtok(NULL," ");
 		while(token){
 			string tempFollowing(token);
-			User** u2;
-			for(u2 = usersList.first(); u2 != NULL; u2 = usersList.next()){
-				if ((*u2)->name() == tempFollowing){
-					while(usersList.next()){
-					}
+			set<User*>::iterator it2;
+			for(it2 = usersList.begin(); it2 != usersList.end(); ++it2){
+				if ((*it2)->name() == tempFollowing){
 					break;
 				}
 			}
-			if(u2 == NULL){
+			if(it2 == usersList.end()){
 				User* tempFollowingUser = new User(tempFollowing);
 				tempUser->addFollowing(tempFollowingUser);
-				usersList.add(tempFollowingUser);
+				usersList.insert(tempFollowingUser);
 
 			}
 			else{
-				tempUser->addFollowing(*u2);
+				tempUser->addFollowing(*it2);
 			}
 			token = strtok(NULL, " ");
 
@@ -182,10 +180,26 @@ int main(int argc, char *argv[]){
 		token = strtok(NULL," ");
 		string tempName(token);
 
+		bool mentionsFeed1 = false;
+		bool mentionsFeed2 = false;
 
 		string tempText = tempName + " ";
 		token = strtok(NULL," ");
+		if(token[0] == '@'){ //first string is an @ mention
+			mentionsFeed1 = true;
+			string tempMentionedName(token);
+			tempMentionedName.erase(tempMentionedName.begin()); //erases the asterisk
+			mentionedName.push_back(tempMentionedName);
+			//cout << "mentioned: " << tempMentionedName << endl;
+		}
 		while(token){
+			if(token[0] == '@'){ //@ mention in the tweet, not the first string
+				mentionsFeed2 = true;
+				string tempMentionedName(token);
+				tempMentionedName.erase(tempMentionedName.begin()); //erases the asterisk
+				mentionedName.push_back(tempMentionedName);
+			}
+
 			string tempToken(token);
 			tempText += (tempToken + " ");
 			token = strtok(NULL, " ");
@@ -195,15 +209,42 @@ int main(int argc, char *argv[]){
 		tempText.pop_back();
 
 		DateTime tempDateTime(tempHour, tempMinute, tempSecond, tempYear, tempMonth, tempDate);
-		User** u3;
-		for(u3 = usersList.first(); u3 != NULL; u3 = usersList.next()){
-			if((*u3)->name() == tempName){
-				Tweet* tempTweet = new Tweet((*u3), tempDateTime, tempText);
-				//cout << *tempTweet << endl;
-				(*u3)->addTweet(tempTweet);
+
+		for(set<User*>::iterator it3 = usersList.begin(); it3 != usersList.end(); ++it3){
+			if((*it3)->name() == tempName){
+				Tweet* tempTweet = new Tweet((*it3), tempDateTime, tempText);
+
+
+				if(mentionsFeed1){ //this tweet will enter the mentionsfeed of the user, the tweet had at mentions inside the tweet
+					(*it3)->addMentions(tempTweet);
+					for(unsigned int i = 0; i < usersList.size(); i++){ //search through the temporary mentioned users list
+						for(set<User*>::iterator it4 = usersList.begin(); it4 != usersList.end(); ++it4){ //serach through full users list
+							if(mentionedName[i] == (*it4)->name()){ //finds if the name equals the mentioned user then add it to their mentioned feed
+								(*it4)->addMentioned(tempTweet);
+							}
+						}
+					}
+				}
+
+				else if(mentionsFeed2){
+					(*it3)->addMentions(tempTweet);
+					for(unsigned int i = 0; i < usersList.size(); i++){ //search through the temporary mentioned users list
+						for(set<User*>::iterator it4 = usersList.begin(); it4 != usersList.end(); ++it4){ //serach through full users list
+							if(mentionedName[i] == (*it4)->name()){ //finds if the name equals the mentioned user then add it to their mentioned feed
+								(*it4)->addMentioned(tempTweet);
+							}
+						}
+					}
+					(*it3)->addTweet(tempTweet);
+				}
+
+				else {
+					(*it3)->addTweet(tempTweet);
+				}
 			}
 		}
 
+		mentionedName.clear(); //empty the temporary mentioned name list
 	}
 
 	/*for(User** d = usersList.first(); d != NULL; d = usersList.next()){
@@ -229,9 +270,7 @@ int main(int argc, char *argv[]){
 
 	ifile.close();
 
-	while(usersList.next()){
-
-	}
+	//done parsing all the data
 
 	/*User** u4;
 	for(u4 = usersList.first(); u4 != NULL; u4 = usersList.next()){
@@ -242,99 +281,29 @@ int main(int argc, char *argv[]){
 	}*/
 
 
-	
+	//creates output files for each user
 
-	User** u;
-	for(u = usersList.first(); u != NULL; u = usersList.next()){
-		oFile = (*u)->name();
+	for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
+		oFile = (*it)->name();
 		oFile += ".feed";
 		ofstream ofile(oFile.c_str());
-		ofile << (*u)->name() << endl;
-		(*u)->makeFeed();
-		int size = (*u)->getFeed().size();
+		ofile << (*it)->name() << endl;
+		(*it)->makeFeed();
+		int size = (*it)->getFeed().size();
 		for(int i = 0; i < size; i++){
-			ofile << (*(*u)->getFeed().get(i)) << endl;
+			ofile << (*(*it)->getFeed().at(i)) << endl;
 		}
 		ofile.close();
 	}
 
-	for(u = usersList.first(); u != NULL; u = usersList.next()){
-		for(int i = 0; i < (*u)->tweets().size(); i++){
-			delete (*u)->tweets().get(i);
+	for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
+		for(int i = 0; i < (*it)->tweets().size(); i++){
+			delete (*it)->tweets().at(i);
 		}
-		delete *u;
+		delete *it;
 	}
 
 	return 0;
 
 }
-
-/*bool checkUsers(char* token, vector<string>& users){
-
-	for (unsigned int i = 0; i < users.size(); i++){
-		if (token == users[i]){
-			return false;
-		}
-	}
-
-	return true;
-
-}
-
-bool checkTags(char* token, vector<string>& tags){
-
-	for (unsigned int i = 0; i < tags.size(); i++){
-		if (token == tags[i]){
-			return false;
-		}
-		
-	}
-
-	return true;
-
-
-}
-
-void tagRemove(char* token){
-
-	int length = strlen(token);
-
-	for (int i = 0; i < (length); i ++){
-		token[i] = token[i+1];
-	}
-
-
-}
-
-void removePunctuation(char* token){ //removes any punctuation that may occur after a username or hashtag
-
-
-	int length = strlen(token);
-	int stopIndex = length;
-
-	for (int p = 0; p < length; p++){ //checks the entire string for any symbol
-
-		if (!isalnum(token[p])){
-			stopIndex = p; //index value of symbol character
-			break;
-		}
-
-	}
-
-	for (int a = length; a >= stopIndex; a--){ //makes each character a null char to store into the string
-		token[a] = '\0';
-
-	}
-
-
-	int lastChar = strlen(token);
-	lastChar--; //index value of the last character, neglecting the null char
-
-	if (!isalnum(token[lastChar])){ // if last character is punctuation, we will replace that with a null char
-
-		token[lastChar] = '\0';
-
-
-	}*/
-//}
 

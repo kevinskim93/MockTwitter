@@ -28,18 +28,18 @@ std::string User::name(){
 /**
  * Gets all the followers of this user  
  * 
- * @return Set of Users who follow this user
+ * @return set of Users who follow this user
  */
-Set<User*> User::followers(){
+std::set<User*> User::followers(){
   return Followers;
 }
 
 /**
  * Gets all the users whom this user follows  
  *
- * @return Set of Users whom this user follows
+ * @return set of Users whom this user follows
  */
-Set<User*> User::following(){
+std::set<User*> User::following(){
   return Following;
 }
 
@@ -48,7 +48,7 @@ Set<User*> User::following(){
  * 
  * @return List of tweets this user has posted
  */
-AList<Tweet*> User::tweets(){
+std::vector<Tweet*> User::tweets(){
   return Tweets;
 }
 
@@ -58,7 +58,7 @@ AList<Tweet*> User::tweets(){
  * @param u User to add as a follower
  */
 void User::addFollower(User* u){
-  Followers.add(u);
+  Followers.insert(u);
 }
 
 /**
@@ -67,7 +67,7 @@ void User::addFollower(User* u){
  * @param u User that the user will now follow
  */
 void User::addFollowing(User* u){
-  Following.add(u);
+  Following.insert(u);
   u->addFollower(this);
 
 }
@@ -78,8 +78,16 @@ void User::addFollowing(User* u){
  * @param t new Tweet posted by this user
  */
 void User::addTweet(Tweet* t){
-  Tweets.insert(Tweets.size(), t);
+  Tweets.push_back(t);
 
+}
+
+void User::addMentions(Tweet* t){
+  MentionsTweets.push_back(t);
+}
+
+void User::addMentioned(Tweet* t){
+  MentionedTweets.push_back(t);
 }
 
 /**
@@ -91,39 +99,75 @@ void User::addTweet(Tweet* t){
  *         and those they follow in timestamp order
  */
 void User::makeFeed(){
-  User** u;
-  for (u = Following.first(); u != NULL; u = Following.next() ){
-    for (int j = 0; j < (*u)->tweets().size(); j++){
-      Feed.insert(Feed.size(), (*u)->tweets().get(j));
+  typename std::set<User*>::iterator it;
+  for(it = Following.begin(); it != Following.end(); ++it){
+    for (int j = 0; j < (*it)->tweets().size(); j++){
+      Feed.push_back((*it)->tweets().at(j));
     }
   }
 
   for (int m = 0; m < Tweets.size(); m++){
-    Feed.insert(Feed.size(), Tweets.get(m));
+    Feed.push_back(Tweets.at(m));
   }
 
+  for (int m = 0; m < MentionsTweets.size(); m++){
+    Feed.push_back(MentionsTweets.at(m));
+  }
 
   for(int i = 0; i < Feed.size()-1; i++){
     int min = i; 
     for(int j = i+1; j < Feed.size(); j++){ 
-      if(*((Feed.get(j))) < (*((Feed.get(min)))) ) { 
+      if(*((Feed.at(j))) < (*((Feed.at(min)))) ) { 
         //std::cout<<min<<std::endl;
         min = j;
       } 
     } 
     
-    Tweet* tempTweet = (Feed.get(min));
+    Tweet* tempTweet = (Feed.at(min));
 
-    Feed.set(min, Feed.get(i)); 
-    Feed.set(i, tempTweet);
+    Feed[min] = Feed[i]; 
+    Feed[i] = tempTweet;
     
   }
 }
 
-AList<Tweet*> User::getFeed(){
+std::vector<Tweet*> User::getFeed(){
 
   return Feed;
 
+
+}
+
+void User::makeMentionedFeed(){
+
+  for (int m = 0; m < MentionedTweets.size(); m++){
+    MentionedFeed.push_back(MentionedTweets.at(m));
+  }
+
+  for(int i = 0; i < MentionedFeed.size()-1; i++){
+    int min = i; 
+    for(int j = i+1; j < MentionedFeed.size(); j++){ 
+      if(*((MentionedFeed.at(j))) < (*((MentionedFeed.at(min)))) ) { 
+        //std::cout<<min<<std::endl;
+        min = j;
+      } 
+    } 
+    
+    Tweet* tempTweet = (MentionedFeed.at(min));
+
+    MentionedFeed[min] = MentionedFeed[i]; 
+    MentionedFeed[i] = tempTweet;
+    
+  }
+
+
+
+
+}
+
+std::vector<Tweet*> User::getMentionedFeed(){
+
+  return MentionedFeed;
 
 }
 
