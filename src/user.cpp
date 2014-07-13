@@ -52,6 +52,10 @@ std::vector<Tweet*> User::tweets(){
   return Tweets;
 }
 
+std::vector<Tweet*> User::mentionstweets(){
+  return MentionsTweets;
+}
+
 /**
  * Adds a follower to this users set of followers
  * 
@@ -101,22 +105,22 @@ void User::addMentioned(Tweet* t){
 void User::makeFeed(){
   typename std::set<User*>::iterator it;
   for(it = Following.begin(); it != Following.end(); ++it){
-    for (int j = 0; j < (*it)->tweets().size(); j++){
+    for (unsigned int j = 0; j < (*it)->tweets().size(); j++){
       Feed.push_back((*it)->tweets().at(j));
     }
   }
 
-  for (int m = 0; m < Tweets.size(); m++){
+  for (unsigned int m = 0; m < Tweets.size(); m++){
     Feed.push_back(Tweets.at(m));
   }
 
-  for (int m = 0; m < MentionsTweets.size(); m++){
+  for (unsigned int m = 0; m < MentionsTweets.size(); m++){
     Feed.push_back(MentionsTweets.at(m));
   }
 
-  for(int i = 0; i < Feed.size()-1; i++){
+  for(unsigned int i = 0; i < Feed.size()-1; i++){
     int min = i; 
-    for(int j = i+1; j < Feed.size(); j++){ 
+    for(unsigned int j = i+1; j < Feed.size(); j++){ 
       if(*((Feed.at(j))) < (*((Feed.at(min)))) ) { 
         //std::cout<<min<<std::endl;
         min = j;
@@ -140,13 +144,13 @@ std::vector<Tweet*> User::getFeed(){
 
 void User::makeMentionedFeed(){
 
-  for (int m = 0; m < MentionedTweets.size(); m++){
+  for (unsigned int m = 0; m < MentionedTweets.size(); m++){
     MentionedFeed.push_back(MentionedTweets.at(m));
   }
 
-  for(int i = 0; i < MentionedFeed.size()-1; i++){
+  for(unsigned int i = 0; i < MentionedFeed.size()-1; i++){
     int min = i; 
-    for(int j = i+1; j < MentionedFeed.size(); j++){ 
+    for(unsigned int j = i+1; j < MentionedFeed.size(); j++){ 
       if(*((MentionedFeed.at(j))) < (*((MentionedFeed.at(min)))) ) { 
         //std::cout<<min<<std::endl;
         min = j;
@@ -169,6 +173,21 @@ std::vector<Tweet*> User::getMentionedFeed(){
 
   return MentionedFeed;
 
+}
+
+void User::deleteMem(){
+
+  Tweets.clear();
+  Tweets.shrink_to_fit();
+  Feed.clear();
+  Feed.shrink_to_fit();
+  MentionedFeed.clear();
+  MentionedFeed.shrink_to_fit();
+  MentionedTweets.clear();
+  MentionedTweets.shrink_to_fit();
+  MentionsTweets.clear();
+  MentionsTweets.shrink_to_fit();
+  //delete this;
 }
 
 /*User& User::operator= (const User & other){

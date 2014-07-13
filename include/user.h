@@ -52,6 +52,8 @@ class User {
    */
   std::vector<Tweet*> tweets();
 
+  std::vector<Tweet*> mentionstweets();
+
   /**
    * Adds a follower to this users set of followers
    * 
@@ -80,6 +82,8 @@ class User {
   void makeFeed();
 
   void makeMentionedFeed();
+
+  void deleteMem();
 
   /**
    * Produces the list of Tweets that represent this users feed/timeline

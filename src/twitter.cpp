@@ -190,6 +190,7 @@ int main(int argc, char *argv[]){
 			string tempMentionedName(token);
 			tempMentionedName.erase(tempMentionedName.begin()); //erases the asterisk
 			mentionedName.push_back(tempMentionedName);
+			token = strtok(NULL," ");
 			//cout << "mentioned: " << tempMentionedName << endl;
 		}
 		while(token){
@@ -211,13 +212,13 @@ int main(int argc, char *argv[]){
 		DateTime tempDateTime(tempHour, tempMinute, tempSecond, tempYear, tempMonth, tempDate);
 
 		for(set<User*>::iterator it3 = usersList.begin(); it3 != usersList.end(); ++it3){
-			if((*it3)->name() == tempName){
-				Tweet* tempTweet = new Tweet((*it3), tempDateTime, tempText);
+			if((*it3)->name() == tempName){ //finds the user for which the name we are currently on
+				Tweet* tempTweet = new Tweet((*it3), tempDateTime, tempText); //makes a new tweet
 
 
 				if(mentionsFeed1){ //this tweet will enter the mentionsfeed of the user, the tweet had at mentions inside the tweet
 					(*it3)->addMentions(tempTweet);
-					for(unsigned int i = 0; i < usersList.size(); i++){ //search through the temporary mentioned users list
+					for(unsigned int i = 0; i < mentionedName.size(); i++){ //search through the temporary mentioned users list
 						for(set<User*>::iterator it4 = usersList.begin(); it4 != usersList.end(); ++it4){ //serach through full users list
 							if(mentionedName[i] == (*it4)->name()){ //finds if the name equals the mentioned user then add it to their mentioned feed
 								(*it4)->addMentioned(tempTweet);
@@ -228,14 +229,14 @@ int main(int argc, char *argv[]){
 
 				else if(mentionsFeed2){
 					(*it3)->addMentions(tempTweet);
-					for(unsigned int i = 0; i < usersList.size(); i++){ //search through the temporary mentioned users list
+					for(unsigned int i = 0; i < mentionedName.size(); i++){ //search through the temporary mentioned users list
 						for(set<User*>::iterator it4 = usersList.begin(); it4 != usersList.end(); ++it4){ //serach through full users list
 							if(mentionedName[i] == (*it4)->name()){ //finds if the name equals the mentioned user then add it to their mentioned feed
 								(*it4)->addMentioned(tempTweet);
 							}
 						}
 					}
-					(*it3)->addTweet(tempTweet);
+					(*it3)->addTweet(tempTweet); //these tweets will still be displayed as main tweets
 				}
 
 				else {
@@ -283,7 +284,7 @@ int main(int argc, char *argv[]){
 
 	//creates output files for each user
 
-	for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
+	/*for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
 		oFile = (*it)->name();
 		oFile += ".feed";
 		ofstream ofile(oFile.c_str());
@@ -294,14 +295,21 @@ int main(int argc, char *argv[]){
 			ofile << (*(*it)->getFeed().at(i)) << endl;
 		}
 		ofile.close();
-	}
+	}*/
 
 	for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
-		for(int i = 0; i < (*it)->tweets().size(); i++){
+		for(unsigned int i = 0; i < (*it)->tweets().size(); i++){
 			delete (*it)->tweets().at(i);
 		}
+
+		for(unsigned int i = 0; i < (*it)->mentionstweets().size(); i++){
+			delete (*it)->mentionstweets().at(i);
+		}
+
 		delete *it;
 	}
+
+
 
 	return 0;
 
