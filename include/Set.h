@@ -13,12 +13,12 @@ class Set : public std::set<T> {
     Set (const Set<T> & other); // copy constructor, making a deep copy
     ~Set ();                    // destructor
 
-    std::set<T> setIntersection (const Set<T> & other) const;
+    Set<T> setIntersection (const Set<T> & other) const;
       /* Returns the intersection of the current set with other.
          That is, returns the set of all items that are both in this
          and in other. */
 
-    std::set<T> setUnion (const Set<T> & other) const;
+    Set<T> setUnion (const Set<T> & other) const;
       /* Returns the union of the current set with other.
          That is, returns the set of all items that are in this set
          or in other (or both).
@@ -55,17 +55,15 @@ Set<T>::~Set(){
 }                   
 
 template<typename T>
-std::set<T> Set<T>::setIntersection(const Set<T> & other) const{
+Set<T> Set<T>::setIntersection(const Set<T> & other) const{
 
-  std::set<T> temp;
+  Set<T> temp;
 
 
-  for(typename std::set<T>::iterator it = this->begin(); it != this->end(); ++it){
-     for(typename std::set<T>::iterator it2 = other.begin(); it2 != other.end(); ++it2){
+  for(typename Set<T>::iterator it = this->begin(); it != this->end(); ++it){
+     for(typename Set<T>::iterator it2 = other.begin(); it2 != other.end(); ++it2){
         if(*it == *it2){
-          if(temp.find(*it) == -1){
-            temp.add(*it);
-          }
+            temp.insert(*it);
         }
       }
     }
@@ -79,25 +77,23 @@ std::set<T> Set<T>::setIntersection(const Set<T> & other) const{
      //mySet.setIntersection(otherSet);
 
 template<typename T>
-std::set<T> Set<T>::setUnion(const Set<T> & other) const{
+Set<T> Set<T>::setUnion(const Set<T> & other) const{
 
-  std::set<T> temp;
+  Set<T> temp;
 
-  for(typename std::set<T>::iterator it = this->begin(); it != this->end(); ++it){
-     if(temp.find(*it) == -1){
-       temp.add(*it);
-     }
+  for(typename Set<T>::iterator it = this->begin(); it != this->end(); ++it){
+       temp.insert(*it);
    }
 
-   for(typename std::set<T>::iterator it = other.begin(); it != other.end(); ++it){
-     if(temp.find(*it) == -1){
-       temp.add(*it);
-     }
+   for(typename Set<T>::iterator it = other.begin(); it != other.end(); ++it){
+       temp.insert(*it);
    }
 
   return temp;
 
 }
+
+
   /* Returns the union of the current set with other.
      That is, returns the set of all items that are in this set
      or in other (or both).
