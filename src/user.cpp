@@ -118,22 +118,24 @@ void User::makeFeed(){
     Feed.push_back(MentionsTweets.at(m));
   }
 
-  for(unsigned int i = 0; i < Feed.size()-1; i++){
-    int min = i; 
-    for(unsigned int j = i+1; j < Feed.size(); j++){ 
-      if(*((Feed.at(j))) > (*((Feed.at(min)))) ) { 
-        //std::cout<<min<<std::endl;
-        min = j;
+  if(Feed.size() > 0){  
+    for(unsigned int i = 0; i < Feed.size()-1; i++){
+      int min = i; 
+      for(unsigned int j = i+1; j < Feed.size(); j++){ 
+        if(*((Feed.at(j))) > (*((Feed.at(min)))) ) { 
+          //std::cout<<min<<std::endl;
+          min = j;
+        } 
       } 
-    } 
-    
-    Tweet* tempTweet = (Feed.at(min));
+      
+      Tweet* tempTweet = (Feed.at(min));
 
-    Feed[min] = Feed[i]; 
-    Feed[i] = tempTweet;
-    
+      Feed[min] = Feed[i]; 
+      Feed[i] = tempTweet;
+      
+      }
+    }
   }
-}
 
 std::vector<Tweet*> User::getFeed(){
 
@@ -144,26 +146,28 @@ std::vector<Tweet*> User::getFeed(){
 
 void User::makeMentionedFeed(){
 
+
   for (unsigned int m = 0; m < MentionedTweets.size(); m++){
     MentionedFeed.push_back(MentionedTweets.at(m));
   }
 
-  /*for(unsigned int i = 0; i < MentionedFeed.size()-1; i++){
-    int min = i; 
-    for(unsigned int j = i+1; j < MentionedFeed.size(); j++){ 
-      if(*((MentionedFeed.at(j))) > (*((MentionedFeed.at(min)))) ) { 
-        //std::cout<<min<<std::endl;
-        min = j;
+  if(MentionedTweets.size() > 0){
+    for(unsigned int i = 0; i < MentionedFeed.size()-1; i++){
+      int min = i; 
+      for(unsigned int j = i+1; j < MentionedFeed.size(); j++){ 
+        if(*((MentionedFeed.at(j))) > (*((MentionedFeed.at(min)))) ) { 
+          //std::cout<<min<<std::endl;
+          min = j;
+        } 
       } 
-    } 
-    
-    Tweet* tempTweet = (MentionedFeed.at(min));
+      
+      Tweet* tempTweet = (MentionedFeed.at(min));
 
-    MentionedFeed[min] = MentionedFeed[i]; 
-    MentionedFeed[i] = tempTweet;
-    
-  }*/
-
+      MentionedFeed[min] = MentionedFeed[i]; 
+      MentionedFeed[i] = tempTweet;
+      
+    }
+  }
 
 
 
@@ -175,6 +179,15 @@ std::vector<Tweet*> User::getMentionedFeed(){
 
 }
 
+void User::deleteFeed(){
+  Feed.clear();
+
+}
+
+void User::deleteMentionedFeed(){
+  MentionedFeed.clear();
+
+}
 /*User& User::operator= (const User & other){
   Name = other.Name;
 }

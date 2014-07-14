@@ -2,6 +2,9 @@
 #define MAINWINDOW_H_
 
 #include "../include/user.h"
+#include <ostream>
+#include <fstream>
+#include <ctime>
 #include <QMainWindow>
 #include <QComboBox>
 #include <QWidget>
@@ -16,6 +19,8 @@
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QTextEdit>
+#include <QLineEdit>
+#include <QMessageBox>
 
 class MainWindow : public QMainWindow {
 
@@ -26,9 +31,11 @@ class MainWindow : public QMainWindow {
  	QComboBox * combo;
  	QComboBox * otherCombo;
  	QTextEdit * newTweet;
+ 	QLineEdit * outputFileName;
  	QPushButton* btnSubmit;
  	QPushButton* btnReset;
  	QPushButton* btnFollow;
+ 	QPushButton* btnOutput;
  	QListWidget * feed;
  	QListWidget * mentionsFeed;
  	QLabel * feedLabel;
@@ -36,16 +43,21 @@ class MainWindow : public QMainWindow {
  	QLabel * otherUserLabel;
  	QLabel * currentUserLabel;
  	QLabel * enterTweetLabel;
+ 	QLabel * enterOutputLabel;
+ 	typename std::set<User*>::iterator it;
+ 	std::vector<std::string> mentionedName;
 
   private slots:
-  	void chooseUser(const QString&);
-  	void submit(const QString&);
+  	void chooseUser();
+  	void submit();
   	void reset();
+  	void output();
 
 
 
   public:
     MainWindow(std::set<User*>& u);
+    void updateWindow();
 
 };
 

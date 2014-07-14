@@ -191,7 +191,7 @@ int main(int argc, char *argv[]){
 		if(token[0] == '@'){ //first string is an @ mention
 			mentionsFeed1 = true;
 			string tempMentionedName(token);
-			tempMentionedName.erase(tempMentionedName.begin()); //erases the asterisk
+			tempMentionedName.erase(tempMentionedName.begin()); //erases the at sign
 			mentionedName.push_back(tempMentionedName);
 			token = strtok(NULL," ");
 			//cout << "mentioned: " << tempMentionedName << endl;
@@ -200,7 +200,7 @@ int main(int argc, char *argv[]){
 			if(token[0] == '@'){ //@ mention in the tweet, not the first string
 				mentionsFeed2 = true;
 				string tempMentionedName(token);
-				tempMentionedName.erase(tempMentionedName.begin()); //erases the asterisk
+				tempMentionedName.erase(tempMentionedName.begin()); //erases the at sign
 				mentionedName.push_back(tempMentionedName);
 			}
 
@@ -226,10 +226,12 @@ int main(int argc, char *argv[]){
 					for(unsigned int i = 0; i < mentionedName.size(); i++){ //search through the temporary mentioned users list
 						for(set<User*>::iterator it4 = usersList.begin(); it4 != usersList.end(); ++it4){ //serach through full users list
 							
+							std::string tempMentionedName = mentionedName[i];
+        					std::transform(tempMentionedName.begin(), tempMentionedName.end(), tempMentionedName.begin(), ::tolower);
+
 							string tempstrName = (*it4)->name();
 							std::transform(tempstrName.begin(), tempstrName.end(), tempstrName.begin(), ::tolower);
-							if(mentionedName[i] == tempstrName){ //finds if the name equals the mentioned user then add it to their mentioned feed
-								cout << "mentoioned" << endl;
+							if(tempMentionedName == tempstrName){ //finds if the name equals the mentioned user then add it to their mentioned feed
 								(*it4)->addMentioned(tempTweet);
 							}
 						}
@@ -237,10 +239,15 @@ int main(int argc, char *argv[]){
 				}
 
 				else if(mentionsFeed2){
-					(*it3)->addMentions(tempTweet);
 					for(unsigned int i = 0; i < mentionedName.size(); i++){ //search through the temporary mentioned users list
 						for(set<User*>::iterator it4 = usersList.begin(); it4 != usersList.end(); ++it4){ //serach through full users list
-							if(mentionedName[i] == (*it4)->name()){ //finds if the name equals the mentioned user then add it to their mentioned feed
+
+							std::string tempMentionedName = mentionedName[i];
+					        std::transform(tempMentionedName.begin(), tempMentionedName.end(), tempMentionedName.begin(), ::tolower);
+
+							string tempstrName = (*it4)->name();
+							std::transform(tempstrName.begin(), tempstrName.end(), tempstrName.begin(), ::tolower);
+							if(tempMentionedName == tempstrName){ //finds if the name equals the mentioned user then add it to their mentioned feed
 								(*it4)->addMentioned(tempTweet);
 							}
 						}
