@@ -83,7 +83,6 @@ class User {
 
   void makeMentionedFeed();
 
-  void deleteMem();
 
   /**
    * Produces the list of Tweets that represent this users feed/timeline

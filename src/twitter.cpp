@@ -7,7 +7,10 @@
 #include <fstream>
 #include <cmath>
 #include <exception>
-#include "../include/user.h"
+#include <QApplication>
+#include <algorithm>
+//#include "../include/user.h"
+#include "../include/mainwindow.h"
 
 using namespace std;
 
@@ -207,7 +210,9 @@ int main(int argc, char *argv[]){
 		}
 
 		//removes extra space at the end
-		tempText.pop_back();
+		if (tempText.size () > 0) {
+			tempText.resize (tempText.size () - 1);
+		}
 
 		DateTime tempDateTime(tempHour, tempMinute, tempSecond, tempYear, tempMonth, tempDate);
 
@@ -220,7 +225,11 @@ int main(int argc, char *argv[]){
 					(*it3)->addMentions(tempTweet);
 					for(unsigned int i = 0; i < mentionedName.size(); i++){ //search through the temporary mentioned users list
 						for(set<User*>::iterator it4 = usersList.begin(); it4 != usersList.end(); ++it4){ //serach through full users list
-							if(mentionedName[i] == (*it4)->name()){ //finds if the name equals the mentioned user then add it to their mentioned feed
+							
+							string tempstrName = (*it4)->name();
+							std::transform(tempstrName.begin(), tempstrName.end(), tempstrName.begin(), ::tolower);
+							if(mentionedName[i] == tempstrName){ //finds if the name equals the mentioned user then add it to their mentioned feed
+								cout << "mentoioned" << endl;
 								(*it4)->addMentioned(tempTweet);
 							}
 						}
@@ -284,20 +293,32 @@ int main(int argc, char *argv[]){
 
 	//creates output files for each user
 
-	/*for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
-		oFile = (*it)->name();
-		oFile += ".feed";
-		ofstream ofile(oFile.c_str());
-		ofile << (*it)->name() << endl;
-		(*it)->makeFeed();
-		int size = (*it)->getFeed().size();
-		for(int i = 0; i < size; i++){
-			ofile << (*(*it)->getFeed().at(i)) << endl;
-		}
-		ofile.close();
-	}*/
-
 	for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
+		//oFile = (*it)->name();
+		//oFile += ".feed";
+		//ofstream ofile(oFile.c_str());
+		//ofile << (*it)->name() << endl;
+		(*it)->makeFeed();
+		(*it)->makeMentionedFeed();
+		//int size = (*it)->getFeed().size();
+		//for(int i = 0; i < size; i++){
+		//	ofile << (*(*it)->getFeed().at(i)) << endl;
+		//}
+		//ofile.close();
+	}
+
+
+
+	QApplication app( argc, argv );
+
+	MainWindow mainwin(usersList);
+	mainwin.setWindowTitle("Twitter");
+	mainwin.show();
+
+	
+
+
+	/*for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
 		for(unsigned int i = 0; i < (*it)->tweets().size(); i++){
 			delete (*it)->tweets().at(i);
 		}
@@ -307,11 +328,12 @@ int main(int argc, char *argv[]){
 		}
 
 		delete *it;
-	}
+	}*/
 
+	
+	return app.exec();
 
-
-	return 0;
+	//return 0;
 
 }
 

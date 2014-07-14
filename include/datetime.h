@@ -1,6 +1,7 @@
 #ifndef DATETIME_H
 #define DATETIME_H
 #include <iostream>
+#include <sstream>
 
 /**
  * Models a timestamp in format YYYY-MM-DD HH:MM:SS 
@@ -17,14 +18,46 @@ struct DateTime
   /**
    * Another constructor 
    */
-  DateTime(int hh, int mm, int ss, int year, int month, int day){
+  DateTime(int hh, int mm, int s, int year, int month, int day){
     hour = hh;
     minute = mm;
-    second = ss;
+    second = s;
     this->year = year;
     this->month = month;
     this->day = day;
 
+    std::stringstream ss;
+    ss << hour;
+    ss >> sHour;
+    ss.clear();
+    ss.str("");
+
+    ss << minute;
+    ss >> sMinute;
+    ss.clear();
+    ss.str("");
+
+    ss << second;
+    ss >> sSecond;
+    ss.clear();
+    ss.str("");
+
+    ss << year;
+    ss >> sYear;
+    ss.clear();
+    ss.str("");
+
+    ss << month;
+    ss >> sMonth;
+    ss.clear();
+    ss.str("");
+
+    ss << day;
+    ss >> sDay;
+    ss.clear();
+    ss.str("");
+
+    dateTime = sYear+"-"+sMonth+"-"+sDay+" "+sHour+":"+sMinute+":"+sSecond;
   }
 
   /**
@@ -32,6 +65,13 @@ struct DateTime
    *
    * @return result of less-than comparison of timestamp
    */
+
+  const std::string& stringTime() const{
+
+    //std::string Time = "yes";
+    return dateTime;
+  }
+
   bool operator<(const DateTime& other){      
 
     if(year < other.year){
@@ -198,6 +238,13 @@ struct DateTime
   int year;
   int month;
   int day;
+  std::string sHour;
+  std::string sMinute;
+  std::string sSecond;
+  std::string sYear;
+  std::string sMonth;
+  std::string sDay;
+  std::string dateTime;
 
 
 

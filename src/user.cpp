@@ -121,7 +121,7 @@ void User::makeFeed(){
   for(unsigned int i = 0; i < Feed.size()-1; i++){
     int min = i; 
     for(unsigned int j = i+1; j < Feed.size(); j++){ 
-      if(*((Feed.at(j))) < (*((Feed.at(min)))) ) { 
+      if(*((Feed.at(j))) > (*((Feed.at(min)))) ) { 
         //std::cout<<min<<std::endl;
         min = j;
       } 
@@ -148,10 +148,10 @@ void User::makeMentionedFeed(){
     MentionedFeed.push_back(MentionedTweets.at(m));
   }
 
-  for(unsigned int i = 0; i < MentionedFeed.size()-1; i++){
+  /*for(unsigned int i = 0; i < MentionedFeed.size()-1; i++){
     int min = i; 
     for(unsigned int j = i+1; j < MentionedFeed.size(); j++){ 
-      if(*((MentionedFeed.at(j))) < (*((MentionedFeed.at(min)))) ) { 
+      if(*((MentionedFeed.at(j))) > (*((MentionedFeed.at(min)))) ) { 
         //std::cout<<min<<std::endl;
         min = j;
       } 
@@ -162,7 +162,7 @@ void User::makeMentionedFeed(){
     MentionedFeed[min] = MentionedFeed[i]; 
     MentionedFeed[i] = tempTweet;
     
-  }
+  }*/
 
 
 
@@ -173,21 +173,6 @@ std::vector<Tweet*> User::getMentionedFeed(){
 
   return MentionedFeed;
 
-}
-
-void User::deleteMem(){
-
-  Tweets.clear();
-  Tweets.shrink_to_fit();
-  Feed.clear();
-  Feed.shrink_to_fit();
-  MentionedFeed.clear();
-  MentionedFeed.shrink_to_fit();
-  MentionedTweets.clear();
-  MentionedTweets.shrink_to_fit();
-  MentionsTweets.clear();
-  MentionsTweets.shrink_to_fit();
-  //delete this;
 }
 
 /*User& User::operator= (const User & other){
