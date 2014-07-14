@@ -3,6 +3,7 @@
 MainWindow::MainWindow(std::set<User*>& u) : users(u){
   setGeometry( 0, 0, 800, 600 );
 
+  //make the combobox to select the current user
   combo = new QComboBox;
 
   it = users.begin();
@@ -11,6 +12,7 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
   	combo->addItem(qstr);
   }
 
+  //make the combobox to select the other user which you will follow
   otherCombo = new QComboBox;
 
   it = users.begin();
@@ -20,6 +22,8 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
       otherCombo->addItem(qstr);
     }
   }
+
+  //submit and reset button for textbox
 
   btnSubmit = new QPushButton(tr("&Submit"));
   btnReset = new QPushButton(tr("&Reset"));
@@ -45,18 +49,15 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
 
   btnFollow = new QPushButton(tr("&Follow"));
 
-  //create the hbox for the other users combobox
 
-  QHBoxLayout * otherUsersList = new QHBoxLayout;
-  otherUsersList->addWidget(otherCombo);
-  otherUsersList->addWidget(btnFollow);
 
   enterTweetLabel = new QLabel("Enter new tweet here:");
   currentUserLabel = new QLabel("Current User:");
-  otherUserLabel = new QLabel("Other User:");
   feedLabel = new QLabel("Feed");
   mentionsLabel = new QLabel("Mentions Feed");
   enterOutputLabel = new QLabel("Enter Name of Output File:");
+  otherUsersLabel = new QLabel("Other Users: ");
+  currentlyFollowLabel = new QLabel("Currently Following:");
 
 
 
@@ -71,8 +72,29 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
   outputArea->addWidget(outputFileName);
   outputArea->addWidget(btnOutput);
 
+  it = users.begin();
+  std::set<User*> followingTemp = (*it)->following();
+
+  followingList = new QListWidget;
+
+  for(std::set<User*>::iterator it4 = followingTemp.begin(); it4 != followingTemp.end(); ++it4){
+    QString qstr = QString::fromStdString((*it4)->name());
+    followingList->addItem(qstr);
+  }
+
+  //followingList->setFixedSize(QSize(550, 100));
+
+  //hbox for the following list
+  //QVBoxLayout * followingListWidget = new QVBoxLayout;
+  //followingListWidget->addWidget(followingList);
+
+  //HBox for the other users and the follow button
+  QHBoxLayout * otherUsersButtons = new QHBoxLayout;
+  otherUsersButtons->addWidget(otherCombo);
+  otherUsersButtons->addWidget(btnFollow);
 
 
+  //creates the widget for the feed
   feed = new QListWidget;
   it = users.begin();
 
@@ -83,7 +105,7 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
   }
 
 
-
+  //create the widget for the mentions feed
   mentionsFeed = new QListWidget;
   typename std::set<User*>::iterator it2 = users.begin();
 
@@ -98,23 +120,34 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
 
   //here you will add layouts to the main layout
 
+  //current user:
+  //combobox with list of users to choose from
   mainLayout->addWidget(currentUserLabel);
   mainLayout->addLayout(usersList);
 
-  mainLayout->addWidget(otherUserLabel);
-  mainLayout->addLayout(otherUsersList);
+  //currently following:
+  //list box with who the current user is following
+  mainLayout->addWidget(currentlyFollowLabel);
+  mainLayout->addWidget(followingList);
 
+  //combobox list of other users with button to follow the other user
+  mainLayout->addWidget(otherUsersLabel);
+  mainLayout->addLayout(otherUsersButtons);
+
+  //feed
   mainLayout->addWidget(feedLabel);
   mainLayout->addWidget(feed);
 
+  //mentions feed
   mainLayout->addWidget(mentionsLabel);
   mainLayout->addWidget(mentionsFeed);
 
+  //enter tweet with a textbox
   mainLayout->addWidget(enterTweetLabel);
   //mainLayout->addWidget(newTweet);
   mainLayout->addLayout(textbox);
 
-
+  //output area for file
   mainLayout->addWidget(enterOutputLabel);
   mainLayout->addLayout(outputArea);
  
@@ -281,7 +314,34 @@ void MainWindow::updateWindow(){
   for(typename std::set<User*>::iterator it2 = users.begin(); it2 != users.end(); ++it2){
     
     if(str == (*it2)->name()){
+
       it = it2;
+
+      otherCombo->clear();
+
+      QString otherUserQ = combo->currentText();
+      std::string otherUser = otherUserQ.toStdString();
+
+      std::set<User*>::iterator it3 = users.begin();
+      for(it3 = users.begin(); it3 != users.end(); ++it3){
+        if((*it)->name() != (*it3)->name()){ 
+          QString qstr = QString::fromStdString((*it3)->name());
+          otherCombo->addItem(qstr);
+        }
+      }
+
+      followingList->clear();
+      std::set<User*> followingTemp = (*it)->following();
+
+
+
+      for(std::set<User*>::iterator it4 = followingTemp.begin(); it4 != followingTemp.end(); ++it4){
+        QString qstr = QString::fromStdString((*it4)->name());
+        followingList->addItem(qstr);
+      }
+
+
+
       (*it)->deleteFeed();
       (*it)->deleteMentionedFeed();
       (*it)->makeFeed();

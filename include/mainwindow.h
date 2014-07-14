@@ -36,14 +36,16 @@ class MainWindow : public QMainWindow {
  	QPushButton* btnReset;
  	QPushButton* btnFollow;
  	QPushButton* btnOutput;
+  QListWidget * followingList;
  	QListWidget * feed;
  	QListWidget * mentionsFeed;
  	QLabel * feedLabel;
  	QLabel * mentionsLabel;
- 	QLabel * otherUserLabel;
  	QLabel * currentUserLabel;
  	QLabel * enterTweetLabel;
  	QLabel * enterOutputLabel;
+  QLabel * otherUsersLabel;
+  QLabel * currentlyFollowLabel;
  	typename std::set<User*>::iterator it;
  	std::vector<std::string> mentionedName;
 
