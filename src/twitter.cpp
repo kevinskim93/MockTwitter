@@ -323,9 +323,9 @@ int main(int argc, char *argv[]){
 	mainwin.show();
 
 	
+	if(!app.exec()){
 
-
-	/*for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
+	for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
 		for(unsigned int i = 0; i < (*it)->tweets().size(); i++){
 			delete (*it)->tweets().at(i);
 		}
@@ -335,12 +335,10 @@ int main(int argc, char *argv[]){
 		}
 
 		delete *it;
-	}*/
+	}
 
-	
-	return app.exec();
-
-	//return 0;
+	return 0;
+}
 
 }
 

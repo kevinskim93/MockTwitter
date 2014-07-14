@@ -128,8 +128,9 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
   //connect
   //connect
   connect(combo, SIGNAL(activated(const QString&) ), this, SLOT (chooseUser() ) );
+  connect(btnFollow, SIGNAL(clicked()), this, SLOT(follow() ));
   connect(btnSubmit, SIGNAL(clicked()), this, SLOT(submit() ));
-  connect(btnReset, SIGNAL(clicked()), this, SLOT(reset()) );
+  connect(btnReset, SIGNAL(clicked()), this, SLOT(reset() ));
   connect(btnOutput,SIGNAL(clicked()), this, SLOT(output()) );
 
   //buttons = new Buttons();
@@ -340,4 +341,21 @@ void MainWindow::output(){
 
 
 
+}
+
+void MainWindow::follow(){
+
+  QString otherUserQ = otherCombo->currentText();
+  std::string otherUser = otherUserQ.toStdString();
+
+  for(typename std::set<User*>::iterator it2 = users.begin(); it2 != users.end(); ++it2){
+    if(otherUser == (*it2)->name()){
+      (*it)->addFollowing(*it2);
+    }
+  }
+
+ 
+
+
+  updateWindow();
 }

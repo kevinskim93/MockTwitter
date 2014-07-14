@@ -52,6 +52,7 @@ class MainWindow : public QMainWindow {
   	void submit();
   	void reset();
   	void output();
+  	void follow();
 
 
 
