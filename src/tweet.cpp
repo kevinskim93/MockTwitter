@@ -19,6 +19,31 @@
   }
 
   /**
+ * Returns all the strings in the tweet starting with a '#' (removing the # from the word)
+ * 
+ * @return unique words starting with a '#' symbol
+ */
+  std::set<std::string> getHashTags(){
+
+
+  }
+
+  bool Tweet::operator<(const Tweet& other){
+    return _time < other._time;
+  }
+
+  bool Tweet::operator>(const Tweet& other){
+    return _time > other._time;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const Tweet& t){
+
+    os << t._time << " " << t._text;
+    return os;
+
+  }
+
+  /**
    * Gets the timestamp of this tweet
    *
    * @return timestamp of the tweet

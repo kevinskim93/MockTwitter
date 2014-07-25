@@ -2,6 +2,7 @@
 #define TWEET_H
 #include <iostream>
 #include <string>
+#include <set>
 #include "datetime.h"
 
 /* Forward declaration */
@@ -38,36 +39,32 @@ class Tweet
   std::string const & text() const;
 
   /**
+ * Returns all the strings in the tweet starting with a '#' (removing the # from the word)
+ * 
+ * @return unique words starting with a '#' symbol
+ */
+  std::set<std::string> getHashTags();
+
+  /**
    * Return true if this Tweet's timestamp is less-than other's
    *
    * @return result of less-than comparison of tweet's timestamp
    */
-  bool operator<(const Tweet& other){
-    return _time < other._time;
-  }
+  bool operator<(const Tweet& other);
 
   /**
    * Return true if this Tweet's timestamp is greater-than other's
    *
    * @return result of greater-than comparison of tweet's timestamp
    */
-  bool operator>(const Tweet& other){
-    return _time > other._time;
-  }
-
+  bool operator>(const Tweet& other);
   /**
    * Outputs the tweet to the given ostream in format:
    *   YYYY-MM-DD HH::MM::SS username tweet_text
    *
    * @return the ostream passed in as an argument
    */
-  friend std::ostream& operator<<(std::ostream& os, const Tweet& t){
-
-    os << t._time << " " << t._text;
-    return os;
-
-  }
-
+  friend std::ostream& operator<<(std::ostream& os, const Tweet& t);
   /* Create any other public or private helper functions you deem 
      necessary */
 
