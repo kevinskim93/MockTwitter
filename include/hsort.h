@@ -4,9 +4,6 @@
 #include <vector>
 #include <iostream>
 
-//declaration of the function
-template <class T, class Comparator>
-void heapify(std::vector<T>& myArray, int index, int sortedIndex, Comparator comp);
 
 //swap two values, templated
 template <class T>
@@ -17,34 +14,12 @@ void swap(T& one, T& two){
 	two = temp;
 }
 
-//pass in the array into this function to make the heap that you will use for the heapsort algorithm
-template <class T, class Comparator>
-void makeHeap(std::vector<T>& myArray, Comparator comp){
-
-	//if the heap array is 0 or 1, it's both a heap and sorted so only do this if its 2 or greater
-	if(myArray.size() > 1){
-		myArray.push_back(myArray[0]);
-		for(int i = 0; i < myArray.size(); i++){
-			myArray[myArray.size()-i] = myArray[myArray.size()-i-1];
-			if(myArray.size()-i-1 == 0){
-				break;
-			}
-		}
-
-		//turns the vector into a heap
-		for(int i = myArray.size()-1; i > 0; i--){
-			heapify(myArray, i, myArray.size(), comp);
-		}
-	}
-}
-
-
-
+//declaration of the function
 template <class T, class Comparator>
 void heapify (std::vector<T>& myArray, int index, int sortedIndex, Comparator comp){
 	//std::cout << "Index: " << index << std::endl;
   	//if the node is a leaf node, then the index*2 (which is the left child node) would be null
-  	if(&(myArray[index*2]) == NULL) {
+  	if(index*2 > sortedIndex) {
   		//std::cout << "noted" << std::endl; 
   		return;
   	}
@@ -52,7 +27,8 @@ void heapify (std::vector<T>& myArray, int index, int sortedIndex, Comparator co
 	int smallerchild = 2*index;
 	//if the right child of the current node exists
 	//this portion ensures that we will use the smaller child in our recursive calls
- 	if(&(myArray[index*2+1]) != NULL) {
+ 	if(smallerchild+1 <= sortedIndex) {
+ 		//std::cout << (myArray[index*2+1]) << std::endl;
  		int rightchild = smallerchild+1;
  		//rightchild was actually smaller than "smallerchild"
  		if(comp(myArray[rightchild], myArray[smallerchild])){
@@ -75,6 +51,32 @@ void heapsort(std::vector<T>& heap, Comparator comp){
 		heapify(heap, 1, heap.size()-i, comp);
 	}
 }
+
+
+//pass in the array into this function to make the heap that you will use for the heapsort algorithm
+template <class T, class Comparator>
+void makeHeap(std::vector<T>& myArray, Comparator comp){
+
+	//if the heap array is 0 or 1, it's both a heap and sorted so only do this if its 2 or greater
+	if(myArray.size() > 1){
+		myArray.push_back(myArray[0]);
+		for(int i = 0; i < myArray.size(); i++){
+			myArray[myArray.size()-1-i] = myArray[myArray.size()-1-i-1];
+			if(myArray.size()-1-i-1 == 0){
+				break;
+			}
+		}
+
+		//turns the vector into a heap
+		for(int i = myArray.size()/2; i > 0; i--){
+			heapify(myArray, i, myArray.size()-1, comp);
+		}
+	}
+}
+
+
+
+
 
 
 #endif
