@@ -21,8 +21,20 @@ void swap(T& one, T& two){
 template <class T, class Comparator>
 void makeHeap(std::vector<T>& myArray, Comparator comp){
 
-	for(int i = myArray.size()-1; i > 0; i--){
-		heapify(myArray, i, myArray.size(), comp);
+	//if the heap array is 0 or 1, it's both a heap and sorted so only do this if its 2 or greater
+	if(myArray.size() > 1){
+		myArray.push_back(myArray[0]);
+		for(int i = 0; i < myArray.size(); i++){
+			myArray[myArray.size()-i] = myArray[myArray.size()-i-1];
+			if(myArray.size()-i-1 == 0){
+				break;
+			}
+		}
+
+		//turns the vector into a heap
+		for(int i = myArray.size()-1; i > 0; i--){
+			heapify(myArray, i, myArray.size(), comp);
+		}
 	}
 }
 
@@ -56,6 +68,7 @@ void heapify (std::vector<T>& myArray, int index, int sortedIndex, Comparator co
 
 template <class T, class Comparator>
 void heapsort(std::vector<T>& heap, Comparator comp){
+	//this will already ensure that it will only run when heap.size() > 1
 	for(int i = 1; i < heap.size(); i++){
 		swap(heap[1], heap[heap.size()-i]);
 		//std::cout << i << std::endl;

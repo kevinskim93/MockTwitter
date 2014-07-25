@@ -28,7 +28,7 @@ int main(){
 
 	vector<string> ints1;
 	//note, the 0th value of the array will always be ignored by this implementation
-	ints1.push_back("FAKE");
+	//ints1.push_back("FAKE");
 	ints1.push_back("ABCD");
 	ints1.push_back("EF");
 	ints1.push_back("GHIJKL");
