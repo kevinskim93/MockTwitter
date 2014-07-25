@@ -1,5 +1,4 @@
-#include "../include/hsort.h"
-#include <string>
+#include "hsort.h"
 #include <iostream>
 
 using namespace std;
