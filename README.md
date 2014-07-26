@@ -14,6 +14,8 @@ Also, heapsort is implemented into the sorting of the popularity of the tweets i
 
 Also, to test the heapsort algorithm on its own, I have included a heapsort directory, with the heapsort.h implementation as well as a file called heapsort.cpp, which is basically a test case of the heapsort in action.
 
+Also, there is a QLabel that will update "Number of Occurences" which basically counts how many tweets there are per tag. This implementation is to make it easy to grade and count and verify that the number of tweets for each tag is accurate and in the correct order.
+
 
 ###Compile & Run Instructions
 To compile this problem, run the following commands after cloning the repository

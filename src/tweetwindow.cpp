@@ -102,6 +102,7 @@ TweetWindow::TweetWindow(std::set<User*>& u, std::map<std::string,std::set<Tweet
 
 }
 
+//this function will choose the "tag" and the tweets to display in the list underneath it
 void TweetWindow::chooseTag(QListWidgetItem* item){
 
 	theTweets->clear();
@@ -155,6 +156,7 @@ void TweetWindow::chooseTag(QListWidgetItem* item){
 		ss << count;
 		ss >> love;
 
+		//counts the number of occurences for each tag, easy for graders to grade!
 		std::string tagSize = std::string("Number of Occurences: ") + love;
 		QString qSize = QString::fromStdString(tagSize);
 		tagsizeLabel->setText(qSize);
@@ -221,7 +223,36 @@ void TweetWindow::refresh(){
 
 	if(timeText == "Past Day"){
 	
+
+
+		std::vector<std::pair<std::string,int> > tweetlist;
+		//dummy vector to just count how many tweets fit the requirements for being within a day
+		std::vector<int> null;
 		//only add the tweets that are within 24 hrs of the current time
+		//this is the entire set of tags in map form
+		for(typename std::map<std::string, std::set<Tweet*> >::iterator it2 = tagsMap.begin(); it2 != tagsMap.end(); ++it2){
+			//this is the set of tweets for a given key value
+			for(typename std::set<Tweet*>::iterator it3 = (*it2).second.begin(); it3 != (*it2).second.end(); ++it3){
+				//std::cout<<(**it3)<<std::endl;
+				if((**it3) > (tempTweet)){
+					null.push_back(9);
+				}
+			}
+			tweetlist.push_back(std::pair<std::string,int>((*it2).first, null.size()));
+			null.clear();
+		}
+
+		OccurenceComp comp;
+		makeHeap(tweetlist, comp);
+		heapsort(tweetlist, comp);
+
+		for(unsigned int i = 1; i < tweetlist.size(); i++){
+			std::string tweetString = tweetlist[i].first;
+			QString qstr = QString::fromStdString(tweetString);
+			theTags->addItem(qstr);
+		}
+
+			/*//only add the tweets that are within 24 hrs of the current time
 		for(typename std::map<std::string, std::set<Tweet*> >::iterator it2 = tagsMap.begin(); it2 != tagsMap.end(); ++it2){
 			int count = 0;
 			for(typename std::set<Tweet*>::iterator it3 = (*it2).second.begin(); it3 != (*it2).second.end(); ++it3){
@@ -245,7 +276,7 @@ void TweetWindow::refresh(){
 				count++;
 			}
 
-		}
+		}*/
 	}
 
 	//selected to view from all time
