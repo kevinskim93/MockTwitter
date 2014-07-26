@@ -1,6 +1,7 @@
 #ifndef TWEET_H
 #define TWEET_H
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <set>
 #include "datetime.h"
@@ -19,6 +20,7 @@ class Tweet
    */
   Tweet();
 
+  Tweet(DateTime& time);
   /**
    * Constructor 
    */

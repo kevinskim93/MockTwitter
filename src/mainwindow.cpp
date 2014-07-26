@@ -1,7 +1,10 @@
 #include "../include/mainwindow.h"
 
-MainWindow::MainWindow(std::set<User*>& u) : users(u){
+MainWindow::MainWindow(std::set<User*>& u, std::map<std::string,std::set<Tweet*> >& t) : users(u), tagsMap(t) {
   setGeometry( 0, 0, 800, 600 );
+
+  TweetWin = new TweetWindow(users, tagsMap);
+  TweetWin->setWindowTitle("Trending Tweets");
 
   //make the combobox to select the current user
   combo = new QComboBox;
@@ -24,7 +27,7 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
   }
 
   //submit and reset button for textbox
-
+TweetWin = new TweetWindow(users, tagsMap);
   btnSubmit = new QPushButton(tr("&Submit"));
   btnReset = new QPushButton(tr("&Reset"));
 
@@ -116,6 +119,12 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
   }
 
 
+  //portion for adding trending tweets function
+  trendingTweets = new QPushButton(tr("&View Trending Tweets"));
+
+
+
+
   QVBoxLayout * mainLayout = new QVBoxLayout; //this is the main layout
 
   //here you will add layouts to the main layout
@@ -142,10 +151,14 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
   mainLayout->addWidget(mentionsLabel);
   mainLayout->addWidget(mentionsFeed);
 
+
   //enter tweet with a textbox
   mainLayout->addWidget(enterTweetLabel);
   //mainLayout->addWidget(newTweet);
   mainLayout->addLayout(textbox);
+
+  //button to view trending tweets
+  mainLayout->addWidget(trendingTweets);
 
   //output area for file
   mainLayout->addWidget(enterOutputLabel);
@@ -165,6 +178,7 @@ MainWindow::MainWindow(std::set<User*>& u) : users(u){
   connect(btnSubmit, SIGNAL(clicked()), this, SLOT(submit() ));
   connect(btnReset, SIGNAL(clicked()), this, SLOT(reset() ));
   connect(btnOutput,SIGNAL(clicked()), this, SLOT(output()) );
+  connect(trendingTweets,SIGNAL(clicked()), this, SLOT(trending()) );
 
   //buttons = new Buttons();
 
@@ -256,6 +270,7 @@ void MainWindow::submit(){
         }
       }
     }
+    (*it)->addTweet(tempTweet);
   }
 
   else if(mentionsFeed2){
@@ -284,6 +299,45 @@ void MainWindow::submit(){
 
   newTweet->clear();
 
+  //now adding implementation to check through all new tweets and add them to the tagsmap
+
+  //go through each of the tweets of the user you are on, find any tags, and add them to the map
+  
+  std::string tweetString = tempTweet->time().stringTime() + " " + tempTweet->text();
+
+  std::string word;
+
+  std::stringstream ss(tweetString);
+  while(ss >> word){
+    //theres a tag!!
+    if(word[0] == '#'){
+      for(unsigned int j = 0; j < word.size()-1; j++){
+        word[j] = word[j+1];
+
+      }
+      //std::cout<<word;
+    //removes the extra character at the end
+      word.resize(word.size()-1);
+
+
+      //iterate through the map to see which tweetswithtags set you will be adding this word into
+      for(typename std::map<std::string,std::set<Tweet*> >::iterator it2 = tagsMap.begin(); it2 != tagsMap.end(); ++it2){
+        //the word was in the map's keytype, so we'll just add it to the set
+        if(word == (*it2).first){
+          //add it to this word's set of tweets which will have tags
+          (*it2).second.insert(tempTweet);
+        }
+        //word wasnt found, add it to temporary set to pass into map
+
+      }
+        std::set<Tweet*> tweetsWithTags;
+        tweetsWithTags.insert(tempTweet);
+        tagsMap.insert(std::pair<std::string,std::set<Tweet*> >(word, tweetsWithTags));
+    }
+  }
+      
+    
+    
   updateWindow();
 
 }
@@ -418,4 +472,14 @@ void MainWindow::follow(){
 
 
   updateWindow();
+}
+
+void MainWindow::trending(){
+
+  delete TweetWin;
+  //updates the new window with any new tags
+  TweetWin = new TweetWindow(users, tagsMap);
+  TweetWin->updateWindow();
+
+  TweetWin->show();
 }

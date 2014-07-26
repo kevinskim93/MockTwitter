@@ -114,9 +114,9 @@ void User::makeFeed(){
     Feed.push_back(Tweets.at(m));
   }
 
-  for (unsigned int m = 0; m < MentionsTweets.size(); m++){
-    Feed.push_back(MentionsTweets.at(m));
-  }
+  //for (unsigned int m = 0; m < MentionsTweets.size(); m++){
+    //Feed.push_back(MentionsTweets.at(m));
+  //}
 
   if(Feed.size() > 0){  
     for(unsigned int i = 0; i < Feed.size()-1; i++){

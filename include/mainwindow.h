@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H_
 #define MAINWINDOW_H_
 
-#include "../include/user.h"
+#include "../include/tweetwindow.h"
 #include <ostream>
 #include <fstream>
 #include <ctime>
@@ -27,7 +27,13 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
 
   private:
+
  	std::set<User*> users;
+  std::map<std::string,std::set<Tweet*> > tagsMap;
+
+  TweetWindow* TweetWin;
+
+
  	QComboBox * combo;
  	QComboBox * otherCombo;
  	QTextEdit * newTweet;
@@ -36,6 +42,7 @@ class MainWindow : public QMainWindow {
  	QPushButton* btnReset;
  	QPushButton* btnFollow;
  	QPushButton* btnOutput;
+  QPushButton* trendingTweets;
   QListWidget * followingList;
  	QListWidget * feed;
  	QListWidget * mentionsFeed;
@@ -55,11 +62,13 @@ class MainWindow : public QMainWindow {
   	void reset();
   	void output();
   	void follow();
+    void trending();
 
 
 
   public:
-    MainWindow(std::set<User*>& u);
+    MainWindow();
+    MainWindow(std::set<User*>& u, std::map<std::string,std::set<Tweet*> >& t);
     void updateWindow();
 
 };

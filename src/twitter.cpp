@@ -10,6 +10,7 @@
 #include <QApplication>
 #include <algorithm>
 //#include "../include/user.h"
+#include <map>
 #include "../include/mainwindow.h"
 
 using namespace std;
@@ -34,6 +35,7 @@ int main(int argc, char *argv[]){
 	ifstream ifile;
 
 	set<User*> usersList;
+	map<string, set<Tweet*> > tagsMap;
 
 	vector<string> mentionedName;
 
@@ -190,6 +192,8 @@ int main(int argc, char *argv[]){
 		token = strtok(NULL," ");
 		if(token[0] == '@'){ //first string is an @ mention
 			mentionsFeed1 = true;
+			string tempToken(token);
+			tempText += (tempToken + " ");
 			string tempMentionedName(token);
 			tempMentionedName.erase(tempMentionedName.begin()); //erases the at sign
 			mentionedName.push_back(tempMentionedName);
@@ -203,6 +207,8 @@ int main(int argc, char *argv[]){
 				tempMentionedName.erase(tempMentionedName.begin()); //erases the at sign
 				mentionedName.push_back(tempMentionedName);
 			}
+
+
 
 			string tempToken(token);
 			tempText += (tempToken + " ");
@@ -234,8 +240,10 @@ int main(int argc, char *argv[]){
 							if(tempMentionedName == tempstrName){ //finds if the name equals the mentioned user then add it to their mentioned feed
 								(*it4)->addMentioned(tempTweet);
 							}
+
 						}
 					}
+					(*it3)->addTweet(tempTweet);
 				}
 
 				else if(mentionsFeed2){
@@ -258,6 +266,7 @@ int main(int argc, char *argv[]){
 				else {
 					(*it3)->addTweet(tempTweet);
 				}
+				//(*it3)->addTweet(tempTweet);
 			}
 		}
 
@@ -316,9 +325,72 @@ int main(int argc, char *argv[]){
 
 
 
+	//search through each users tweets to find the hashtags and add them to the map
+
+	for(typename std::set<User*>::iterator it = usersList.begin(); it != usersList.end(); ++it){
+
+		//go through each of the tweets of the user you are on, find any tags, and add them to the map
+		for(unsigned int i = 0; i < (*it)->tweets().size(); i++){
+			string tweetString = (*it)->tweets().at(i)->time().stringTime() + " " + (*it)->tweets().at(i)->text();
+
+			string word;
+
+			stringstream ss(tweetString);
+			while(ss >> word){
+				//theres a tag!!
+				if(word[0] == '#'){
+					for(unsigned int j = 0; j < word.size()-1; j++){
+						word[j] = word[j+1];
+
+					}
+				//removes the extra character at the end
+					word.resize(word.size()-1);
+		
+
+					//iterate through the map to see which tweetswithtags set you will be adding this word into
+					for(typename std::map<string,set<Tweet*> >::iterator it2 = tagsMap.begin(); it2 != tagsMap.end(); ++it2){
+						//the word was in the map's keytype, so we'll just add it to the set
+						if(word == (*it2).first){
+							//add it to this word's set of tweets which will have tags
+							(*it2).second.insert((*it)->tweets().at(i));
+						}
+						//word wasnt found, add it to temporary set to pass into map
+			
+					}
+
+					set<Tweet*> tweetsWithTags;
+					tweetsWithTags.insert((*it)->tweets().at(i));
+					tagsMap.insert(pair<string,set<Tweet*> >(word, tweetsWithTags));
+
+				}
+				
+			}
+		}
+
+//std::string tweetString = (*it2)->getFeed().at(i)->time().stringTime() + " " + (*it2)->getFeed().at(i)->text(); 
+
+		/*else if (token[0] == '#'){
+			string tempTag(token);
+			//makes sure its not a lone hashtag
+			if (tempTag.size() > 1){
+				//removes the hashtag
+				for(unsigned int i = 0; i < tempTag.size()-1; i++){
+					tempTag[i] = tempTag[i+1]
+
+				}
+				//removes the extra character at the end
+				tempTag.resize(tempTag.size()-1);
+			}
+
+			tagsMap.insert(pair<string,Tweet*>(tempTag,tempTweet))
+		}*/
+	}
+
+
+
 	QApplication app( argc, argv );
 
-	MainWindow mainwin(usersList);
+	MainWindow mainwin(usersList, tagsMap);
 	mainwin.setWindowTitle("Twitter");
 	mainwin.show();
 
@@ -330,9 +402,9 @@ int main(int argc, char *argv[]){
 			delete (*it)->tweets().at(i);
 		}
 
-		for(unsigned int i = 0; i < (*it)->mentionstweets().size(); i++){
-			delete (*it)->mentionstweets().at(i);
-		}
+		//for(unsigned int i = 0; i < (*it)->mentionstweets().size(); i++){
+			//delete (*it)->mentionstweets().at(i);
+		//}
 
 		delete *it;
 	}

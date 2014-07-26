@@ -8,6 +8,10 @@
 
   }
 
+  Tweet::Tweet(DateTime& time){
+    _time = time;
+  }
+
   /**
    * Constructor 
    */
@@ -23,8 +27,30 @@
  * 
  * @return unique words starting with a '#' symbol
  */
-  std::set<std::string> getHashTags(){
+  std::set<std::string> Tweet::getHashTags(){
 
+    std::set<std::string> tags;
+    std::string word;
+    std::stringstream ss;
+    ss << _text;
+    ss >> word;
+    while(word.size() > 0){
+      if(word[0] == '#'){
+        for(unsigned int i = 0; i < word.size()-1; i++){
+          word[i] = word[i+1];
+        }
+
+        word.resize(word.size()-1);
+        tags.insert(word);
+      }
+
+      ss.clear();
+      ss.str("");
+      ss << _text;
+      ss >> word;
+    }
+
+    return tags;
 
   }
 
