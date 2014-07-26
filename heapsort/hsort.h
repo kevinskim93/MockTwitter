@@ -5,9 +5,9 @@
 #include <iostream>
 
 
-//swap two values, templated
+//changeup two values, templated
 template <class T>
-void swap(T& one, T& two){
+void changeup(T& one, T& two){
 
 	T temp = one;
 	one = two;
@@ -37,7 +37,7 @@ void heapify (std::vector<T>& myArray, int index, int sortedIndex, Comparator co
 	}
 	//if the index is greater than the smallerchild, need to heapify again
 	if(comp(myArray[smallerchild], myArray[index]) && smallerchild < sortedIndex){
- 		swap(myArray[index], myArray[smallerchild]);
+ 		changeup(myArray[index], myArray[smallerchild]);
  		heapify(myArray, smallerchild, sortedIndex, comp);
 	}
 }
@@ -46,7 +46,7 @@ template <class T, class Comparator>
 void heapsort(std::vector<T>& heap, Comparator comp){
 	//this will already ensure that it will only run when heap.size() > 1
 	for(int i = 1; i < heap.size(); i++){
-		swap(heap[1], heap[heap.size()-i]);
+		changeup(heap[1], heap[heap.size()-i]);
 		//std::cout << i << std::endl;
 		heapify(heap, 1, heap.size()-i, comp);
 	}

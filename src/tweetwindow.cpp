@@ -117,23 +117,73 @@ void TweetWindow::chooseTag(QListWidgetItem* item){
 		}
 	}
 
-	for(typename std::set<Tweet*>::iterator it3 = (*it).second.begin(); it3 != (*it).second.end(); ++it3){
-		std::string tweetString = (*it3)->time().stringTime() + " " + (*it3)->text(); 
-        QString qstr = QString::fromStdString(tweetString);
+	//how you do this part will depend on if you are looking at all time or just 24 hours
+	QString QtimeText = alltimeorToday->currentText();
+  	std::string timeText = QtimeText.toStdString();
 
-		theTweets->addItem(qstr);
+  	//going to only consider tweets from the past 24 hours
+	if(timeText == "Past Day"){
+		time_t t = time(0);   // get time now
+		struct tm * now = localtime( &t );
+		int tempYear = (now->tm_year + 1900);
+		int tempMonth = (now->tm_mon + 1);
+		int tempDate = now->tm_mday;
+		int tempHour = now->tm_hour;
+		int tempMinute = now->tm_min;
+		int tempSecond = now->tm_sec;
+		     
+
+		DateTime tempDateTime(tempHour, tempMinute, tempSecond, tempYear, tempMonth, tempDate);
+
+		DateTime dayAgo(tempHour, tempMinute, tempSecond, tempYear, tempMonth, tempDate-1);
+		//std::cout <<tempDate-1;
+
+		Tweet tempTweet(dayAgo);
+		int count = 0;
+
+		for(typename std::set<Tweet*>::iterator it3 = (*it).second.begin(); it3 != (*it).second.end(); ++it3){
+			if((**it3) > tempTweet){
+				std::string tweetString = (*it3)->time().stringTime() + " " + (*it3)->text(); 
+		        QString qstr = QString::fromStdString(tweetString);
+		        count++;
+				theTweets->addItem(qstr);
+			}
+		}
+
+		std::stringstream ss;
+		std::string love;
+		ss << count;
+		ss >> love;
+
+		std::string tagSize = std::string("Number of Occurences: ") + love;
+		QString qSize = QString::fromStdString(tagSize);
+		tagsizeLabel->setText(qSize);
+
+
+
 	}
 
-	std::stringstream ss;
-	std::string love;
-	ss << (*it).second.size();
-	ss >> love;
-
-	std::string tagSize = std::string("Number of Occurences: ") + love;
-	QString qSize = QString::fromStdString(tagSize);
-	tagsizeLabel->setText(qSize);
 
 
+	//going to consider all tweets in history
+	else{
+		for(typename std::set<Tweet*>::iterator it3 = (*it).second.begin(); it3 != (*it).second.end(); ++it3){
+			std::string tweetString = (*it3)->time().stringTime() + " " + (*it3)->text(); 
+	        QString qstr = QString::fromStdString(tweetString);
+
+			theTweets->addItem(qstr);
+		}
+
+		std::stringstream ss;
+		std::string love;
+		ss << (*it).second.size();
+		ss >> love;
+
+		std::string tagSize = std::string("Number of Occurences: ") + love;
+		QString qSize = QString::fromStdString(tagSize);
+		tagsizeLabel->setText(qSize);
+
+	}
 }
 
 void TweetWindow::refresh(){
@@ -167,8 +217,10 @@ void TweetWindow::refresh(){
 	QString QtimeText = alltimeorToday->currentText();
   	std::string timeText = QtimeText.toStdString();
 
+  	theTags->clear();
+
 	if(timeText == "Past Day"){
-		theTags->clear();
+	
 		//only add the tweets that are within 24 hrs of the current time
 		for(typename std::map<std::string, std::set<Tweet*> >::iterator it2 = tagsMap.begin(); it2 != tagsMap.end(); ++it2){
 			int count = 0;
@@ -198,12 +250,28 @@ void TweetWindow::refresh(){
 
 	//selected to view from all time
 	else{
-		theTags->clear();
+		
+		std::vector<std::pair<std::string,int> > tweetlist;
 		for(typename std::map<std::string, std::set<Tweet*> >::iterator it2 = tagsMap.begin(); it2 != tagsMap.end(); ++it2){
+			tweetlist.push_back(std::pair<std::string,int>((*it2).first, (*it2).second.size()));
+		}
+
+		//IMPLEMENTATION OF HEAPSORT ALGORITHM
+		OccurenceComp comp;
+		makeHeap(tweetlist, comp);
+		heapsort(tweetlist, comp);
+
+		for(unsigned int i = 1; i < tweetlist.size(); i++){
+			std::string tweetString = tweetlist[i].first;
+			QString qstr = QString::fromStdString(tweetString);
+			theTags->addItem(qstr);
+		}
+
+		/*for(typename std::map<std::string, std::set<Tweet*> >::iterator it2 = tagsMap.begin(); it2 != tagsMap.end(); ++it2){
 			std::string tweetString = (*it2).first; 
     		QString qstr = QString::fromStdString(tweetString);
   			theTags->addItem(qstr);
-		}
+		}*/
 
 	}
 

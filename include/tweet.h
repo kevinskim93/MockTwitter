@@ -89,4 +89,12 @@ struct TweetComp
     return (*t1 > *t2);
   }
 };
+
+struct heapTweetComp
+{
+  bool operator()(Tweet* t1, Tweet* t2)
+  {
+    return (*t1 < *t2);
+  }
+};
 #endif

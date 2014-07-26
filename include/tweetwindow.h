@@ -2,6 +2,9 @@
 #define TWEETWINDOW_H
 
 #include "../include/user.h"
+#include "../include/hsort.h"
+#include <vector>
+#include <set>
 #include <map>
 #include <ostream>
 #include <fstream>
@@ -24,6 +27,14 @@
 #include <QTextEdit>
 #include <QLineEdit>
 #include <QMessageBox>
+
+struct OccurenceComp {
+    bool operator()(const std::pair<std::string,int > lhs, const std::pair<std::string,int > rhs) 
+    { // Uses string's built in operator< 
+      // to do lexicographic (alphabetical) comparison
+      return lhs.second <= rhs.second; 
+    }
+};
 
 class TweetWindow : public QMainWindow {
 

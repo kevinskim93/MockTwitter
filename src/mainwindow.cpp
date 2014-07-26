@@ -422,7 +422,7 @@ void MainWindow::updateWindow(){
 void MainWindow::output(){
 
 
-  updateWindow();
+  
 
   if(outputFileName->text() == NULL){
     QMessageBox messageBox;
@@ -434,6 +434,9 @@ void MainWindow::output(){
     std::string oFile;
     oFile = outputFileName->text().toStdString();
     std::ofstream ofile(oFile.c_str());
+
+
+
     ofile << (*it)->name() << std::endl << std::endl;
 
     int size = (*it)->getFeed().size();
@@ -453,7 +456,7 @@ void MainWindow::output(){
     ofile.close();
   }    
 
-
+    updateWindow();
 
 }
 
@@ -479,6 +482,7 @@ void MainWindow::trending(){
   delete TweetWin;
   //updates the new window with any new tags
   TweetWin = new TweetWindow(users, tagsMap);
+  TweetWin->setWindowTitle("Trending Tweets");
   TweetWin->updateWindow();
 
   TweetWin->show();
