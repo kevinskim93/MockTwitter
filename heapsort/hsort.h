@@ -59,9 +59,12 @@ void makeHeap(std::vector<T>& myArray, Comparator comp){
 
 	//if the heap array is 0 or 1, it's both a heap and sorted so only do this if its 2 or greater
 	if(myArray.size() > 1){
+		//adding the 0th value to the back because the 0th value will be a dummy
 		myArray.push_back(myArray[0]);
 		for(int i = 0; i < myArray.size(); i++){
+			//switching the places one spot to the right
 			myArray[myArray.size()-1-i] = myArray[myArray.size()-1-i-1];
+			//last spot, break to avoid segfault
 			if(myArray.size()-1-i-1 == 0){
 				break;
 			}
