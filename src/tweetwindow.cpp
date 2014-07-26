@@ -136,12 +136,12 @@ void TweetWindow::chooseTag(QListWidgetItem* item){
 
 		DateTime tempDateTime(tempHour, tempMinute, tempSecond, tempYear, tempMonth, tempDate);
 
+		//temporary date time to compare a "dayago"
 		DateTime dayAgo(tempHour, tempMinute, tempSecond, tempYear, tempMonth, tempDate-1);
 		//std::cout <<tempDate-1;
 
 		Tweet tempTweet(dayAgo);
 		int count = 0;
-
 		for(typename std::set<Tweet*>::iterator it3 = (*it).second.begin(); it3 != (*it).second.end(); ++it3){
 			if((**it3) > tempTweet){
 				std::string tweetString = (*it3)->time().stringTime() + " " + (*it3)->text(); 
@@ -249,6 +249,7 @@ void TweetWindow::refresh(){
 		for(unsigned int i = 1; i < tweetlist.size(); i++){
 			std::string tweetString = tweetlist[i].first;
 			QString qstr = QString::fromStdString(tweetString);
+			if(i > 10) break;
 			theTags->addItem(qstr);
 		}
 
@@ -295,6 +296,7 @@ void TweetWindow::refresh(){
 		for(unsigned int i = 1; i < tweetlist.size(); i++){
 			std::string tweetString = tweetlist[i].first;
 			QString qstr = QString::fromStdString(tweetString);
+			if(i > 10) break;
 			theTags->addItem(qstr);
 		}
 
