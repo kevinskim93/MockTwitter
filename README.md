@@ -19,9 +19,12 @@ Also, there is a QLabel that will update "Number of Occurences" which basically 
 
 
 ###Compile & Run Instructions
+
+My directory has a specify .pro file due to certain folders I have for graders to look at if necessary, as such
 To compile this problem, run the following commands after cloning the repository
 ```bash
 cd proj_kevinsk
+qmake
 make
 ```
 
